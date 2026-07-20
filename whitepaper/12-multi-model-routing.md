@@ -1,6 +1,6 @@
-# 3.2 Multi-Model Routing 🚧
+# 3.2 Multi-Model Routing (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 the Inference Payload Processor (IPP) and HTTPRoute-based routing operate purely at the Gateway
 layer; each backing `InferencePool` can independently be an Intel XPU deployment.
 

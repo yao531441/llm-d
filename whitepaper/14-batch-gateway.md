@@ -1,6 +1,6 @@
-# 4.2 Batch Gateway 🚧
+# 4.2 Batch Gateway (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 Batch Gateway dispatches to an existing llm-d Router endpoint; the backing model server can be
 any Optimized Baseline overlay, including Intel XPU.
 

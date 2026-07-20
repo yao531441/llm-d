@@ -1,6 +1,6 @@
-# 2.1 Flow Control 🚧
+# 2.1 Flow Control (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 same steps apply on Intel XPU as any other accelerator.
 
 ## Overview

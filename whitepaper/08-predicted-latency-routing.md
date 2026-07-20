@@ -1,6 +1,6 @@
-# 2.2 Predicted Latency-Based Routing 🚧
+# 2.2 Predicted Latency-Based Routing (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic at
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic at
 the routing layer; the GPU/TPU-specific model-server paths shown upstream do not include an
 Intel XPU variant of their own — Intel XPU deployers reuse the Optimized Baseline overlay exactly
 as the guide's "For other backends" note instructs.

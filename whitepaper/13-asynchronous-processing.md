@@ -1,6 +1,6 @@
-# 4.1 Asynchronous Processing 🚧
+# 4.1 Asynchronous Processing (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 the Async Processor dispatches to whatever llm-d Router endpoint you give it; the backing model
 server can be any Optimized Baseline overlay, including Intel XPU.
 

@@ -1,6 +1,6 @@
-# 2.3 Workload Autoscaling 🚧
+# 2.3 Workload Autoscaling (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 scales whatever model-server Deployment you already run (including the Intel XPU Optimized
 Baseline overlay); no accelerator-specific autoscaling logic exists.
 

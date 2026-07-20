@@ -13,31 +13,32 @@ Template reference: ../template.md
 
 ## Table of Contents
 
-> Status icons: ✅ verified working / 🚧 documented from official sources but not yet run hands-on /
-> 📝 outline only, full deployment steps not yet written / ➖ not applicable (no Intel XPU backend exists upstream)
+> Status labels used below: **Verified** (ran hands-on and confirmed working) / **In Progress**
+> (documented from official sources, not yet run hands-on) / **Outline** (outline only, full
+> deployment steps not yet written) / **N/A** (not applicable — no Intel XPU backend exists upstream)
 
 - [00-common-installation.md](00-common-installation.md) — Chapter 0. Common Installation (applies to every case below)
 - **Chapter 1. Intel XPU Well-Lit Paths** (real Intel XPU overlay confirmed in-repo; deployment steps documented but not yet hands-on validated on a live cluster)
-  - [01-optimized-baseline.md](01-optimized-baseline.md) — 1.1 Optimized Baseline 🚧
-  - [02-pd-disaggregation.md](02-pd-disaggregation.md) — 1.2 P/D Disaggregation 🚧
-  - [03-precise-prefix-cache-routing.md](03-precise-prefix-cache-routing.md) — 1.3 Precise Prefix Cache Routing 🚧
-  - [04-tiered-prefix-cache.md](04-tiered-prefix-cache.md) — 1.4 Tiered Prefix Cache 🚧
-  - [05-wide-ep.md](05-wide-ep.md) — 1.5 Wide Expert Parallelism 🚧
-  - [06-multimodal-serving.md](06-multimodal-serving.md) — 1.6 Multimodal Serving (Aggregated) 🚧
-- **Chapter 2. Router-Layer Features** (hardware-agnostic, compose on top of Chapter 1) — 🚧 fully written
+  - [01-optimized-baseline.md](01-optimized-baseline.md) — 1.1 Optimized Baseline (In Progress)
+  - [02-pd-disaggregation.md](02-pd-disaggregation.md) — 1.2 P/D Disaggregation (In Progress)
+  - [03-precise-prefix-cache-routing.md](03-precise-prefix-cache-routing.md) — 1.3 Precise Prefix Cache Routing (In Progress)
+  - [04-tiered-prefix-cache.md](04-tiered-prefix-cache.md) — 1.4 Tiered Prefix Cache (In Progress)
+  - [05-wide-ep.md](05-wide-ep.md) — 1.5 Wide Expert Parallelism (In Progress)
+  - [06-multimodal-serving.md](06-multimodal-serving.md) — 1.6 Multimodal Serving (Aggregated) (In Progress)
+- **Chapter 2. Router-Layer Features** (hardware-agnostic, compose on top of Chapter 1) — In Progress, fully written
   - [07-flow-control.md](07-flow-control.md) — 2.1 Flow Control
   - [08-predicted-latency-routing.md](08-predicted-latency-routing.md) — 2.2 Predicted Latency-Based Routing
   - [09-workload-autoscaling.md](09-workload-autoscaling.md) — 2.3 Workload Autoscaling
   - [10-rollouts.md](10-rollouts.md) — 2.4 Rollouts (note: repo path moved from `guides/rollouts/` to `docs/operations/rollouts/`)
-- **Chapter 3. Composite Workloads** — 🚧 fully written
+- **Chapter 3. Composite Workloads** — In Progress, fully written
   - [11-agentic-serving.md](11-agentic-serving.md) — 3.1 Agentic Serving (Intel XPU: manual composition of Chapter 1 guides, no ready-made upstream deployment)
   - [12-multi-model-routing.md](12-multi-model-routing.md) — 3.2 Multi-Model Routing
-- **Chapter 4. Experimental Guides** — 🚧 fully written
+- **Chapter 4. Experimental Guides** — In Progress, fully written
   - [13-asynchronous-processing.md](13-asynchronous-processing.md) — 4.1 Asynchronous Processing
   - [14-batch-gateway.md](14-batch-gateway.md) — 4.2 Batch Gateway
 - **Chapter 5. Other Deployment Forms**
-  - [15-no-kubernetes-deployment.md](15-no-kubernetes-deployment.md) — 5.1 No-Kubernetes Deployment 🚧 (NVIDIA-only upstream; this chapter documents the exact Intel XPU substitution)
-  - [16-encode-disaggregation.md](16-encode-disaggregation.md) — 5.2 Encode Disaggregation (Multimodal) ➖ (confirmed no Intel XPU backend exists)
+  - [15-no-kubernetes-deployment.md](15-no-kubernetes-deployment.md) — 5.1 No-Kubernetes Deployment (In Progress; NVIDIA-only upstream — this chapter documents the exact Intel XPU substitution)
+  - [16-encode-disaggregation.md](16-encode-disaggregation.md) — 5.2 Encode Disaggregation (Multimodal) (N/A — confirmed no Intel XPU backend exists)
 - [appendix-a-env-vars.md](appendix-a-env-vars.md) — Appendix A. Environment Variable Reference
 - [appendix-b-known-issues.md](appendix-b-known-issues.md) — Appendix B. Known Issues
 - [tracking.md](tracking.md) — Appendix C. Case Verification Status (live tracker)
@@ -55,10 +56,10 @@ The remaining guides (`flow-control`, `predicted-latency-routing`, `workload-aut
 `no-kubernetes-deployment`) are **router-layer or composite features that are accelerator-agnostic
 by design** — they sit on top of whatever model-server overlay you deploy (including the Intel XPU
 overlay from `optimized-baseline`), and reference it rather than shipping a separate XPU overlay of
-their own. All nine now have fully-written deployment chapters (Chapters 2–5, 🚧).
+their own. All nine now have fully-written deployment chapters (Chapters 2–5, In Progress).
 `no-kubernetes-deployment` is explicitly documented as NVIDIA + vLLM specific, with the Intel XPU
 substitution spelled out in full in its chapter — it is not a maintained, first-class Intel XPU
 path upstream, but the chapter is complete. `encode-disaggregation` (under
 `multimodal-serving/e-disaggregation/`) has **no** Intel XPU backend at all — its
-"Supported Hardware Backends" table lists NVIDIA GPU only — so it is documented as ➖ not applicable
+"Supported Hardware Backends" table lists NVIDIA GPU only — so it is documented as N/A
 rather than given deployment steps. All case-by-case detail is tracked in `tracking.md`.

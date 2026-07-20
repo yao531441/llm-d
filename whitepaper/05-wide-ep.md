@@ -1,4 +1,4 @@
-# 1.5 Wide Expert Parallelism 🚧
+# 1.5 Wide Expert Parallelism (In Progress)
 
 ## Overview
 

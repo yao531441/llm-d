@@ -1,6 +1,6 @@
-# 2.4 Rollouts 🚧
+# 2.4 Rollouts (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. Hardware-agnostic —
+**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
 directly useful for migrating an existing NVIDIA deployment to Intel XPU (or vice versa) with
 minimal disruption, see "Node/Accelerator Update Roll Out" below.
 

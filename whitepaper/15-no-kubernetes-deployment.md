@@ -1,6 +1,6 @@
-# 5.1 No-Kubernetes Deployment 🚧
+# 5.1 No-Kubernetes Deployment (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. **This guide targets
+**Status**: documented from official repo sources, not yet run hands-on. **This guide targets
 NVIDIA GPUs + vLLM specifically** — the model-server image, CLI flags, and `--gpus` container
 invocation shown upstream are NVIDIA-specific. It is **not** a maintained, first-class Intel XPU
 path today; Intel XPU is explicitly left to the reader as a manual substitution. This chapter

@@ -1,6 +1,6 @@
-# 3.1 Agentic Serving 🚧
+# 3.1 Agentic Serving (In Progress)
 
-**Status**: 🚧 documented from official repo sources, not yet run hands-on. This is a **workload
+**Status**: documented from official repo sources, not yet run hands-on. This is a **workload
 composition guide**, not a standalone deployable overlay — its two ready-made hardware-specific
 deployments (NVIDIA H200, Google TPU v7) do not include an Intel XPU variant; Intel XPU users
 compose the same building blocks manually as described below.

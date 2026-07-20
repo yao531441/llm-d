@@ -1,6 +1,6 @@
-# 5.2 Encode Disaggregation (Multimodal) ➖
+# 5.2 Encode Disaggregation (Multimodal) (N/A)
 
-**Status**: ➖ not applicable — confirmed **no Intel XPU backend exists** for this guide.
+**Status**: not applicable — confirmed **no Intel XPU backend exists** for this guide.
 
 ## Overview
 
@@ -35,7 +35,7 @@ repository content, so this chapter intentionally stops at the scope note.
 
 Follow the same chapter template as [Chapter 1.6](06-multimodal-serving.md) once a
 `modelserver/xpu/` overlay appears for this guide — check `guides/multimodal-serving/e-disaggregation/`
-for updates, and update this chapter's status from ➖ to 🚧/✅ accordingly.
+for updates, and update this chapter's status from (N/A) to (In Progress)/(Verified) accordingly.
 
 ## Config Reference
 
@@ -43,5 +43,5 @@ for updates, and update this chapter's status from ➖ to 🚧/✅ accordingly.
 |---|---|---|
 | Reference model | `Qwen/Qwen3-VL-32B-Instruct` | |
 | Topologies | E/PD (2 encode + 8× TP2 combined prefill/decode), E/P/D (2 encode + 2× TP4 prefill + 2× TP4 decode) | |
-| Intel XPU support | None upstream | ➖ not applicable today |
+| Intel XPU support | None upstream | Not applicable today |
 | Related, Intel-XPU-supported case | [Multimodal Serving (Aggregated)](06-multimodal-serving.md) | simpler topology, has a real `modelserver/xpu/vllm` overlay |

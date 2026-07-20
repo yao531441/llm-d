@@ -1,4 +1,4 @@
-# 1.6 Multimodal Serving (Aggregated) 🚧
+# 1.6 Multimodal Serving (Aggregated) (In Progress)
 
 ## Overview
 
