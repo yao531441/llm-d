@@ -58,7 +58,7 @@ overlay from `optimized-baseline`), and reference it rather than shipping a sepa
 their own. All nine now have fully-written deployment chapters (Chapters 2–5, 🚧).
 `no-kubernetes-deployment` is explicitly documented as NVIDIA + vLLM specific, with the Intel XPU
 substitution spelled out in full in its chapter — it is not a maintained, first-class Intel XPU
-path upstream, but the chapter is complete. `encode-disaggregation` (also discovered via this
-search, under `multimodal-serving/e-disaggregation/`) has **no** Intel XPU backend at all — its
+path upstream, but the chapter is complete. `encode-disaggregation` (under
+`multimodal-serving/e-disaggregation/`) has **no** Intel XPU backend at all — its
 "Supported Hardware Backends" table lists NVIDIA GPU only — so it is documented as ➖ not applicable
 rather than given deployment steps. All case-by-case detail is tracked in `tracking.md`.

@@ -22,7 +22,7 @@ Status legend: ✅ verified working / 🚧 documented from official sources, not
 | 7 | Flow Control | `guides/flow-control` | 🚧 | | Fully written; reuses Optimized Baseline Intel XPU overlay via `sed` relabeling |
 | 8 | Predicted Latency-Based Routing | `guides/predicted-latency-routing` | 🚧 | | Fully written; reuses Optimized Baseline overlay directly, no relabeling needed |
 | 9 | Workload Autoscaling (4 sub-modes) | `guides/workload-autoscaling` | 🚧 | | Fully written; `README.md` / `README.hpa-epp.md` KEDA+EPP path detailed with real commands, WVA path referenced |
-| 10 | Rollouts | `docs/operations/rollouts` (moved from `guides/rollouts`) | 🚧 | | Fully written; includes Blue-Green Update example reframed as Intel XPU node/accelerator migration; flags the stale-path repo reorg as a real-world example of the BKM-drift problem |
+| 10 | Rollouts | `docs/operations/rollouts` (moved from `guides/rollouts`) | 🚧 | | Fully written; includes Blue-Green Update example reframed as Intel XPU node/accelerator migration; the guide path itself moved in a repo reorg, noted in the chapter as a reminder to verify current paths |
 | 11 | Agentic Serving | `guides/agentic-serving` | 🚧 | | Fully written; no ready-made upstream Intel XPU deployment (H200/TPU only) — chapter shows manual composition of Chapter 1 building blocks, explicitly caveated as not CI-validated as a combined stack |
 | 12 | Multi-Model Routing | `guides/multi-model-routing` | 🚧 | | Fully written; IPP + HTTPRoute header-based routing, includes LoRA adapter routing |
 | 13 | Asynchronous Processing | `guides/asynchronous-processing` | 🚧 | | Fully written; Async Processor via GCP Pub/Sub or Redis, dispatches to any Optimized Baseline endpoint |
