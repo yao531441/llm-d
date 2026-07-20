@@ -11,25 +11,6 @@ Template reference: ../template.md
 > Target hardware: Intel Data Center GPU (Max series, Arc Pro B60) exposed to Kubernetes via the
 > `gpu.intel.com` Dynamic Resource Allocation (DRA) device class
 
-## Why the old wiki BKM no longer applies
-
-llm-d went through an architecture change that directly affects how this whitepaper is written.
-The table below lists the key differences so readers understand why the old wiki content
-(and the reference document this project started from) is out of date:
-
-| Old approach (wiki BKM / earlier reference doc) | Current approach (main branch) |
-|---|---|
-| One-shot `helmfile apply -e xpu` deploying `infra-pd` / `gaie-pd` / `ms-pd` charts together | Separate `helm install` (Router) + `kubectl apply -k` (Kustomize model-server overlay) steps |
-| Gateway/CRD prerequisites under `guides/prereq/gateway-provider` | Moved to `docs/infrastructure/gateway/` |
-| GPU declared via `resources.limits."gpu.intel.com/xe"` | Declared via Kubernetes **DRA** `ResourceClaimTemplate` with `deviceClassName: gpu.intel.com` |
-| A single, guide-specific `values_xpu.yaml` | A Kustomize overlay directory per guide (`modelserver/xpu/vllm/`) with `patch-vllm.yaml` / `patch-decode.yaml` / `patch-prefill.yaml` + a `resource-claim-template(s).yaml` |
-
-**Bottom line:** any old BKM referencing `helmfile`, `values_xpu.yaml`, or
-`gpu.intel.com/i915` / `gpu.intel.com/xe` resource `limits` is obsolete. This whitepaper is
-written entirely from the current state of the repository.
-
----
-
 ## Table of Contents
 
 > Status icons: ✅ verified working / 🚧 documented from official sources but not yet run hands-on /
