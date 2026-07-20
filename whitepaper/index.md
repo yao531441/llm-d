@@ -36,13 +36,13 @@ written entirely from the current state of the repository.
 > 📝 outline only, full deployment steps not yet written / ➖ not applicable (no Intel XPU backend exists upstream)
 
 - [00-common-installation.md](00-common-installation.md) — Chapter 0. Common Installation (applies to every case below)
-- **Chapter 1. Intel XPU Well-Lit Paths** (deployment configs verified to exist in-repo)
-  - [01-optimized-baseline.md](01-optimized-baseline.md) — 1.1 Optimized Baseline ✅
-  - [02-pd-disaggregation.md](02-pd-disaggregation.md) — 1.2 P/D Disaggregation ✅
-  - [03-precise-prefix-cache-routing.md](03-precise-prefix-cache-routing.md) — 1.3 Precise Prefix Cache Routing ✅
-  - [04-tiered-prefix-cache.md](04-tiered-prefix-cache.md) — 1.4 Tiered Prefix Cache ✅
-  - [05-wide-ep.md](05-wide-ep.md) — 1.5 Wide Expert Parallelism ✅
-  - [06-multimodal-serving.md](06-multimodal-serving.md) — 1.6 Multimodal Serving (Aggregated) ✅
+- **Chapter 1. Intel XPU Well-Lit Paths** (real Intel XPU overlay confirmed in-repo; deployment steps documented but not yet hands-on validated on a live cluster)
+  - [01-optimized-baseline.md](01-optimized-baseline.md) — 1.1 Optimized Baseline 🚧
+  - [02-pd-disaggregation.md](02-pd-disaggregation.md) — 1.2 P/D Disaggregation 🚧
+  - [03-precise-prefix-cache-routing.md](03-precise-prefix-cache-routing.md) — 1.3 Precise Prefix Cache Routing 🚧
+  - [04-tiered-prefix-cache.md](04-tiered-prefix-cache.md) — 1.4 Tiered Prefix Cache 🚧
+  - [05-wide-ep.md](05-wide-ep.md) — 1.5 Wide Expert Parallelism 🚧
+  - [06-multimodal-serving.md](06-multimodal-serving.md) — 1.6 Multimodal Serving (Aggregated) 🚧
 - **Chapter 2. Router-Layer Features** (hardware-agnostic, compose on top of Chapter 1) — 🚧 fully written
   - [07-flow-control.md](07-flow-control.md) — 2.1 Flow Control
   - [08-predicted-latency-routing.md](08-predicted-latency-routing.md) — 2.2 Predicted Latency-Based Routing

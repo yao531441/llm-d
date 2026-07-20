@@ -7,7 +7,7 @@
 
 - A Kubernetes cluster (1.29+ recommended) with nodes exposing Intel Data Center GPU Max series or
   Intel Arc Pro GPUs
-- The **Intel GPU device plugin / DRA driver** installed, so that `kubectl get resourceclasses`
+- The **Intel GPU device plugin / DRA driver** installed, so that `kubectl get deviceclass`
   lists `gpu.intel.com`
 - Local client tools: `kubectl`, `helm` (v3); see
   [`helpers/client-setup/README.md`](https://github.com/llm-d/llm-d/blob/main/helpers/client-setup/README.md)

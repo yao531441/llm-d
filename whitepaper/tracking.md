@@ -29,7 +29,7 @@ Status legend: ✅ verified working / 🚧 documented from official sources, not
 | 14 | Batch Gateway | `guides/batch-gateway` | 🚧 | | Fully written; OpenAI-compatible Batch API, full JSONL upload/submit/monitor/download example |
 | 15 | No-Kubernetes Deployment | `guides/no-kubernetes-deployment` | 🚧 | | Fully written; explicitly NVIDIA + vLLM specific upstream, chapter documents the exact Intel XPU substitution (image, `--device=/dev/dri`, XCCL) rather than presenting it as a maintained path |
 | 16 | Encode Disaggregation (Multimodal) | `guides/multimodal-serving/e-disaggregation` | ➖ | | Newly discovered guide; "Supported Hardware Backends" table lists NVIDIA GPU (vLLM) only, no Intel XPU entry — documented as not applicable |
-| 17 | RL (verl integration) | `guides/rl` | ⚠️ | | **Resolved**: `verl-integration.md` has zero hardware-specific references (no CUDA/NVIDIA/XPU mentions); overrides verl's routing via the llm-d scheduler over "vLLM/SGLang actors on Ray" — same pattern as Flow Control / Multi-Model Routing, both confirmed hardware-agnostic. Feasible-but-untemplated for Intel XPU, not yet written as a full chapter |
+| 17 | RL (verl integration) | `guides/rl` | ⚠️ | | `verl-integration.md` has zero hardware-specific references (no CUDA/NVIDIA/XPU mentions); overrides verl's routing via the llm-d scheduler over "vLLM/SGLang actors on Ray" — same pattern as Flow Control / Multi-Model Routing, both confirmed hardware-agnostic. Investigated and found feasible-but-untemplated for Intel XPU; not yet written as a full chapter, and in/out-of-scope decision still pending stakeholder sign-off |
 
 ## Recommended next steps
 
