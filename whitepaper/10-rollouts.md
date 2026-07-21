@@ -5,10 +5,9 @@ directly useful for migrating an existing NVIDIA deployment to Intel XPU (or vic
 minimal disruption, see "Node/Accelerator Update Roll Out" below.
 
 > **Repo location note**: the guides-index (`guides/README.md`) links to `./rollouts/README.md`,
-> but as of this writing that path has moved to `docs/operations/rollouts/` as part of a broader
-> documentation reorganization ("Reorganize part 2: create two new pillars, operations and
-> infrastructure"). Always verify a guide's current path against `git log`/`find` before
-> trusting a README link. This chapter is written against the current path.
+> but that path has moved to `docs/operations/rollouts/` as part of a broader documentation
+> reorganization ("Reorganize part 2: create two new pillars, operations and infrastructure").
+> The commands below reference the current `docs/operations/rollouts/` path.
 
 ## Overview
 
