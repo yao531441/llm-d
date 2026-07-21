@@ -28,9 +28,8 @@ hardcode a version.
 ## 0.3 Install the Gateway API Inference Extension CRDs
 
 > [!IMPORTANT]
-> The old `guides/prereq/gateway-provider` directory has been removed. CRD installation is now a
-> single command; Gateway Provider installation (Istio / GKE / Agentgateway) lives under
-> `docs/infrastructure/gateway/`.
+> CRD installation is a single command below. Gateway Provider installation (Istio / GKE /
+> Agentgateway) lives under `docs/infrastructure/gateway/`.
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api-inference-extension/releases/download/${GAIE_VERSION}/v1-manifests.yaml
