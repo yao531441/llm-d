@@ -5,12 +5,42 @@
 
 ## 0.1 Cluster and Hardware Requirements
 
-- A Kubernetes cluster (1.29+ recommended) with nodes exposing Intel Data Center GPU Max series or
-  Intel Arc Pro GPUs
-- The **Intel GPU device plugin / DRA driver** installed, so that `kubectl get deviceclass`
+- A Kubernetes cluster (1.29+ recommended; 1.34+ if you plan to use the DRA-based deployment
+  templates, since DRA's structured-parameters API only reached GA in that release) with nodes
+  exposing Intel Data Center GPU Max series or Intel Arc Pro GPUs, and the host Linux
+  [Intel GPU kernel driver](https://dgpu-docs.intel.com/driver/kernel-driver-types.html) already
+  installed on each node
+- The **Intel GPU DRA driver** installed (see 0.1.1 below), so that `kubectl get deviceclass`
   lists `gpu.intel.com`
 - Local client tools: `kubectl`, `helm` (v3); see
   [`helpers/client-setup/README.md`](https://github.com/llm-d/llm-d/blob/main/helpers/client-setup/README.md)
+
+### 0.1.1 Install the Intel GPU DRA Driver
+
+Not part of the llm-d repo itself — this is a cluster-level, vendor-provided component from
+[`intel/intel-resource-drivers-for-kubernetes`](https://github.com/intel/intel-resource-drivers-for-kubernetes)
+that must be installed once per cluster before any Intel XPU case in this whitepaper. Install via
+its published Helm chart:
+
+```bash
+helm install \
+  --namespace intel-gpu-resource-driver \
+  --create-namespace \
+  intel-gpu-resource-driver oci://ghcr.io/intel/intel-resource-drivers-for-kubernetes/intel-gpu-resource-driver-chart
+```
+
+Verify the driver is up and the `gpu.intel.com` `DeviceClass` and per-node `ResourceSlice`
+objects were published:
+
+```bash
+kubectl get pods -n intel-gpu-resource-driver
+kubectl get deviceclass gpu.intel.com
+kubectl get resourceslices
+```
+
+See the driver's own [GPU documentation](https://github.com/intel/intel-resource-drivers-for-kubernetes/blob/main/doc/gpu/USAGE.md)
+for container-runtime CDI requirements (CRI-O 1.23+ or Containerd 1.7+ with CDI enabled) and
+alternative install methods (kustomize, Node Feature Discovery-scoped rollout).
 
 ## 0.2 Clone the Repository
 
