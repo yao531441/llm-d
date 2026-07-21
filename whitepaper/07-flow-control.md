@@ -117,7 +117,12 @@ immediately because the system is work-conserving.
 
 ```bash
 helm uninstall ${GUIDE_NAME} -n ${NAMESPACE}
-kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/optimized-baseline/modelserver/xpu/vllm/
+# Must reuse the same kustomize+sed rename pipeline as the deploy step above — the resources were
+# created under the ${GUIDE_NAME}-prefixed names, not the original optimized-baseline names, so a
+# plain `kubectl delete -k .../optimized-baseline/modelserver/xpu/vllm/` would not match them.
+kubectl kustomize ${REPO_ROOT}/guides/optimized-baseline/modelserver/xpu/vllm/ \
+  | sed "s/optimized-baseline/${GUIDE_NAME}/g" \
+  | kubectl delete -n ${NAMESPACE} -f -
 kubectl delete namespace ${NAMESPACE}
 ```
 

@@ -20,7 +20,9 @@ Two supported queue implementations:
 ## Prerequisites
 
 - Kubernetes v1.31+ (Kind/Minikube for local dev; GKE/AKS/OpenShift for production).
-- A Gateway control plane deployed (`docs/infrastructure/gateway/README.md`).
+- **Gateway Mode only**: a Gateway control plane deployed (`docs/infrastructure/gateway/README.md`).
+  Not needed if you use Standalone Mode (step 1 below), which talks to the Router's Service
+  `clusterIP` directly instead of a Gateway.
 - An existing [Optimized Baseline](01-optimized-baseline.md) stack on Intel XPU to dispatch
   requests to — Async Processor is additive, not a replacement for the model-serving stack.
 

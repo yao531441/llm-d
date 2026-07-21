@@ -42,7 +42,9 @@ helm install ipp /tmp/ipp/config/charts/payload-processor \
     --set inferenceGateway.name=llm-d-inference-gateway \
     --set payloadProcessor.image.tag=v0.1.0-rc.4 \
     -n ${NAMESPACE}
-# use --set provider.name=gke on GKE, or omit provider.name for standalone (no Gateway)
+# --set provider.name=gke on GKE. --set provider.name=none skips the auto-generated
+# Istio EnvoyFilter/GKE GCPRoutingExtension — a Gateway is still required either way, you'd just
+# wire IPP's ext-proc integration into it yourself instead of letting the chart do it.
 
 kubectl get pods -n ${NAMESPACE} -l app=payload-processor
 

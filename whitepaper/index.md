@@ -41,7 +41,10 @@ Template reference: ../template.md
   - [16-encode-disaggregation.md](16-encode-disaggregation.md) — 5.2 Encode Disaggregation (Multimodal) (N/A — confirmed no Intel XPU backend exists)
 - [appendix-a-env-vars.md](appendix-a-env-vars.md) — Appendix A. Environment Variable Reference
 - [appendix-b-known-issues.md](appendix-b-known-issues.md) — Appendix B. Known Issues
-- [tracking.md](tracking.md) — Appendix C. Case Verification Status (live tracker)
+
+> `tracking.md` in this directory is a separate, continuously-updated per-case validation-status
+> tracker — useful when browsing the repository directly, but it is not one of the chapters above
+> and is not included in the compiled PDF/Word export of this whitepaper.
 
 ### Scope note: which guides actually ship an Intel XPU configuration
 

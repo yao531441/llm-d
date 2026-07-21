@@ -59,9 +59,16 @@ kubectl port-forward -n ${NAMESPACE} svc/batch-gateway-apiserver 8081:8081 &
 curl http://localhost:8081/health
 ```
 
+`batch-gateway-apiserver` exposes two separate ports on the same Service: `8081` for the
+health/readiness endpoint above, and `8000` for the actual REST API (confirmed by the in-cluster
+URL `http://batch-gateway-apiserver:8000` used in the project's own benchmark manifests). The
+Inference Test below needs its own port-forward to `8000`.
+
 ## Inference Test
 
 ```bash
+kubectl port-forward -n ${NAMESPACE} svc/batch-gateway-apiserver 8000:8000 &
+
 # 1. Prepare a JSONL input file (OpenAI Batch API format)
 cat > batch_input.jsonl <<'EOF'
 {"custom_id": "req-001", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "my-model", "messages": [{"role": "user", "content": "Hello"}], "max_tokens": 100}}

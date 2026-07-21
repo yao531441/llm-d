@@ -15,7 +15,7 @@ This is distinct from the **Multimodal Serving (Aggregated)** case already cover
 [Chapter 1.6](06-multimodal-serving.md), which *does* have a dedicated Intel XPU overlay. Encode
 Disaggregation is the more advanced, encode-stage-separated sibling of that guide.
 
-## Why this chapter is empty of deployment steps
+## Why this guide has no Intel XPU deployment steps
 
 The guide's own "Supported Hardware Backends" table lists exactly one backend:
 
@@ -25,17 +25,13 @@ The guide's own "Supported Hardware Backends" table lists exactly one backend:
 
 There is no `modelserver/xpu/` (or any other non-NVIDIA) entry. Unlike the router-layer/composite
 guides in Chapters 2–3 (which are hardware-agnostic and simply reuse whichever model-server
-overlay you deploy), Encode Disaggregation's model-server manifests themselves are NVIDIA-specific
-and there is no accelerator-agnostic substitution path documented upstream, unlike
-[No-Kubernetes Deployment](15-no-kubernetes-deployment.md) where the substitution is
-straightforward. Writing speculative Intel XPU steps here would not be traceable to any real
-repository content, so this chapter intentionally stops at the scope note.
+overlay you deploy), Encode Disaggregation's model-server manifests themselves are NVIDIA-specific,
+and there is no accelerator-agnostic substitution path documented upstream — unlike
+[No-Kubernetes Deployment](15-no-kubernetes-deployment.md), where the substitution is
+straightforward.
 
-## If Intel XPU support is added upstream
-
-Follow the same chapter template as [Chapter 1.6](06-multimodal-serving.md) once a
-`modelserver/xpu/` overlay appears for this guide — check `guides/multimodal-serving/e-disaggregation/`
-for updates, and update this chapter's status from (N/A) to (In Progress)/(Verified) accordingly.
+If Intel XPU support is added upstream in the future, check
+`guides/multimodal-serving/e-disaggregation/` for a `modelserver/xpu/` overlay.
 
 ## Config Reference
 

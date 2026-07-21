@@ -20,7 +20,10 @@ An experimental **Replica Rebalancing** feature (`README.replica-rebalancing.md`
 replica counts across annotated HPAs sharing a GPU budget — explicitly flagged upstream as a
 proof-of-concept, not production-ready.
 
-Both paths require KEDA is the recommended metrics adapter (Prometheus Adapter is deprecated).
+KEDA (or the OpenShift Custom Metrics Autoscaler Operator) is the recommended metrics adapter for
+both paths — Prometheus Adapter is deprecated. The **KEDA + EPP Metrics** path documents KEDA as
+the primary supported route. The **HPA + WVA Metrics** path can use KEDA-managed HPA (recommended)
+or a plain HPA reading the `wva_desired_replicas` external metric directly, without KEDA.
 
 ## Prerequisites
 
