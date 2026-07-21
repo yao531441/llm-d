@@ -23,9 +23,8 @@ DP-aware scheduling. The reference GPU configuration targets `DeepSeek-R1-0528` 
 
 ## Prerequisites
 
-Chapter 0, plus:
-- [Intel Resource Drivers for Kubernetes](https://github.com/intel/intel-resource-drivers-for-kubernetes)
-  installed, with the `gpu.intel.com` DRA `DeviceClass` verified available
+Chapter 0, plus the [Intel GPU DRA driver](00-common-installation.md#011-install-the-intel-gpu-dra-driver)
+already covers this case's device requirement — no additional driver install beyond Chapter 0.
 
 ## Deployment Steps
 
