@@ -3,9 +3,8 @@
 **Status**: documented from official repo sources, not yet run hands-on. **This guide targets
 NVIDIA GPUs + vLLM specifically** — the model-server image, CLI flags, and `--gpus` container
 invocation shown upstream are NVIDIA-specific. It is **not** a maintained, first-class Intel XPU
-path today; Intel XPU is explicitly left to the reader as a manual substitution. This chapter
-documents the guide as-is and explains exactly what to substitute for Intel XPU, rather than
-presenting an untested Intel XPU procedure as if it were upstream-supported.
+path today; Intel XPU support is a manual substitution (detailed below), not something upstream
+provides or tests.
 
 ## Overview
 
