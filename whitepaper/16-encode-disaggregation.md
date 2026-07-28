@@ -33,11 +33,6 @@ straightforward.
 If Intel XPU support is added upstream in the future, check
 `guides/multimodal-serving/e-disaggregation/` for a `modelserver/xpu/` overlay.
 
-## Config Reference
-
-| Field | Value | Notes |
-|---|---|---|
-| Reference model | `Qwen/Qwen3-VL-32B-Instruct` | |
-| Topologies | E/PD (2 encode + 8× TP2 combined prefill/decode), E/P/D (2 encode + 2× TP4 prefill + 2× TP4 decode) | |
-| Intel XPU support | None upstream | Not applicable today |
-| Related, Intel-XPU-supported case | [Multimodal Serving (Aggregated)](06-multimodal-serving.md) | simpler topology, has a real `modelserver/xpu/vllm` overlay |
+For a working, Intel-XPU-supported alternative today, see
+[Multimodal Serving (Aggregated)](06-multimodal-serving.md) — a simpler topology with a real
+`modelserver/xpu/vllm` overlay.
