@@ -34,7 +34,6 @@ Template reference: ../template.md
   - [14-batch-gateway.md](14-batch-gateway.md) — 4.2 Batch Gateway
 - **Chapter 5. Other Deployment Forms**
   - [15-no-kubernetes-deployment.md](15-no-kubernetes-deployment.md) — 5.1 No-Kubernetes Deployment (NVIDIA-only upstream — this chapter documents the Intel XPU substitution)
-  - [16-encode-disaggregation.md](16-encode-disaggregation.md) — 5.2 Encode Disaggregation (Multimodal) (no Intel XPU backend exists upstream)
 - [appendix-a-env-vars.md](appendix-a-env-vars.md) — Appendix A. Environment Variable Reference
 - [appendix-b-known-issues.md](appendix-b-known-issues.md) — Appendix B. Known Issues
 
@@ -57,7 +56,9 @@ by design** — they sit on top of whatever model-server overlay you deploy (inc
 overlay from `optimized-baseline`), and reference it rather than shipping a separate XPU overlay of
 their own (Chapters 2–5). `no-kubernetes-deployment` is explicitly documented as NVIDIA + vLLM
 specific, with the Intel XPU substitution spelled out in full in its chapter — it is not a
-maintained, first-class Intel XPU path upstream. `encode-disaggregation` (under
-`multimodal-serving/e-disaggregation/`) has **no** Intel XPU backend at all — its
-"Supported Hardware Backends" table lists NVIDIA GPU only. All case-by-case verification status is
-tracked in `tracking.md`.
+maintained, first-class Intel XPU path upstream.
+
+`multimodal-serving/e-disaggregation` (Encode Disaggregation) was investigated and excluded from
+this whitepaper: its "Supported Hardware Backends" table lists NVIDIA GPU only, with no Intel XPU
+backend or accelerator-agnostic substitution path — see `tracking.md` for the one-line record.
+All case-by-case verification status is tracked in `tracking.md`.
