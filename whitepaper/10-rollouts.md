@@ -1,8 +1,4 @@
-# 2.4 Rollouts (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
-directly useful for migrating an existing NVIDIA deployment to Intel XPU (or vice versa) with
-minimal disruption, see "Node/Accelerator Update Roll Out" below.
+# 2.4 Rollouts
 
 > **Repo location note**: the guides-index (`guides/README.md`) links to `./rollouts/README.md`,
 > but that path has moved to `docs/operations/rollouts/` as part of a broader documentation
@@ -10,6 +6,9 @@ minimal disruption, see "Node/Accelerator Update Roll Out" below.
 > The commands below reference the current `docs/operations/rollouts/` path.
 
 ## Overview
+
+Hardware-agnostic — directly useful for migrating an existing NVIDIA deployment to Intel XPU (or
+vice versa) with minimal disruption, see "Node/Accelerator Update Roll Out" below.
 
 Rollout guides cover three incremental deployment strategies for updating inference
 infrastructure with minimal service disruption. Source: `docs/operations/rollouts/README.md`.

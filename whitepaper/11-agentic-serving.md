@@ -1,11 +1,10 @@
-# 3.1 Agentic Serving (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. This is a **workload
-composition guide**, not a standalone deployable overlay — its two ready-made hardware-specific
-deployments (NVIDIA H200, Google TPU v7) do not include an Intel XPU variant; Intel XPU users
-compose the same building blocks manually as described below.
+# 3.1 Agentic Serving
 
 ## Overview
+
+This is a **workload composition guide**, not a standalone deployable overlay — its two
+ready-made hardware-specific deployments (NVIDIA H200, Google TPU v7) do not include an Intel XPU
+variant; Intel XPU users compose the same building blocks manually as described below.
 
 Agentic Serving is a horizontal, workload-centric umbrella guide for serving agentic *programs*
 (e.g. coding agents) on llm-d — it composes several capability guides into one recommended,

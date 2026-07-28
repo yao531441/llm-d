@@ -1,10 +1,9 @@
-# 4.1 Asynchronous Processing (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
-the Async Processor dispatches to whatever llm-d Router endpoint you give it; the backing model
-server can be any Optimized Baseline overlay, including Intel XPU.
+# 4.1 Asynchronous Processing
 
 ## Overview
+
+Hardware-agnostic — the Async Processor dispatches to whatever llm-d Router endpoint you give it;
+the backing model server can be any Optimized Baseline overlay, including Intel XPU.
 
 The [Async Processor](https://github.com/llm-d-incubation/llm-d-async) processes inference
 requests asynchronously via a queue-based architecture — ideal for latency-insensitive workloads

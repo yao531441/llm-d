@@ -1,10 +1,9 @@
-# 2.3 Workload Autoscaling (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
-scales whatever model-server Deployment you already run (including the Intel XPU Optimized
-Baseline overlay); no accelerator-specific autoscaling logic exists.
+# 2.3 Workload Autoscaling
 
 ## Overview
+
+Hardware-agnostic — scales whatever model-server Deployment you already run (including the Intel
+XPU Optimized Baseline overlay); no accelerator-specific autoscaling logic exists.
 
 CPU/GPU utilization metrics are poor autoscaling signals for LLM inference — accelerators often
 sit near 100% "utilized" during active batching regardless of actual load. This guide covers two

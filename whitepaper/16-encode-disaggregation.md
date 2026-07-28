@@ -1,6 +1,4 @@
-# 5.2 Encode Disaggregation (Multimodal) (N/A)
-
-**Status**: not applicable — confirmed **no Intel XPU backend exists** for this guide.
+# 5.2 Encode Disaggregation (Multimodal)
 
 ## Overview
 

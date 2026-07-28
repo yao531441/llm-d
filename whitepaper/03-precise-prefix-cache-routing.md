@@ -1,4 +1,4 @@
-# 1.3 Precise Prefix Cache Routing (In Progress)
+# 1.3 Precise Prefix Cache Routing
 
 ## Overview
 

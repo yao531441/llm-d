@@ -1,9 +1,8 @@
-# 2.1 Flow Control (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
-same steps apply on Intel XPU as any other accelerator.
+# 2.1 Flow Control
 
 ## Overview
+
+Hardware-agnostic — same steps apply on Intel XPU as any other accelerator.
 
 Flow Control adds intelligent request queuing at the llm-d Router (EPP) level. Traditional load
 balancing falls short for LLM inference because resource consumption varies wildly per request;

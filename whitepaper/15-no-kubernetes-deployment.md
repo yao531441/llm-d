@@ -1,12 +1,11 @@
-# 5.1 No-Kubernetes Deployment (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. **This guide targets
-NVIDIA GPUs + vLLM specifically** — the model-server image, CLI flags, and `--gpus` container
-invocation shown upstream are NVIDIA-specific. It is **not** a maintained, first-class Intel XPU
-path today; Intel XPU support is a manual substitution (detailed below), not something upstream
-provides or tests.
+# 5.1 No-Kubernetes Deployment
 
 ## Overview
+
+**This guide targets NVIDIA GPUs + vLLM specifically** — the model-server image, CLI flags, and
+`--gpus` container invocation shown upstream are NVIDIA-specific. It is **not** a maintained,
+first-class Intel XPU path today; Intel XPU support is a manual substitution (detailed below),
+not something upstream provides or tests.
 
 Deploys the llm-d routing stack (EPP + Envoy + one or more vLLM workers) **without a Kubernetes
 cluster** — the EPP gets its endpoint inventory from a plain YAML file on disk via the

@@ -1,4 +1,4 @@
-# 1.4 Tiered Prefix Cache (In Progress)
+# 1.4 Tiered Prefix Cache
 
 ## Overview
 

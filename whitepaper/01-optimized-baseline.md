@@ -1,4 +1,4 @@
-# 1.1 Optimized Baseline (In Progress)
+# 1.1 Optimized Baseline
 
 ## Overview
 

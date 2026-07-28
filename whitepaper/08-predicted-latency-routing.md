@@ -1,11 +1,10 @@
-# 2.2 Predicted Latency-Based Routing (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic at
-the routing layer; the GPU/TPU-specific model-server paths shown upstream do not include an
-Intel XPU variant of their own — Intel XPU deployers reuse the Optimized Baseline overlay exactly
-as the guide's "For other backends" note instructs.
+# 2.2 Predicted Latency-Based Routing
 
 ## Overview
+
+Hardware-agnostic at the routing layer; the GPU/TPU-specific model-server paths shown upstream do
+not include an Intel XPU variant of their own — Intel XPU deployers reuse the Optimized Baseline
+overlay exactly as the guide's "For other backends" note instructs.
 
 Routes each inference request to the model server predicted to serve it fastest, using a
 live-trained XGBoost latency-prediction model instead of heuristic queue-depth/KV-utilization

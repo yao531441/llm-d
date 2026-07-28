@@ -1,10 +1,9 @@
-# 4.2 Batch Gateway (In Progress)
-
-**Status**: documented from official repo sources, not yet run hands-on. Hardware-agnostic —
-Batch Gateway dispatches to an existing llm-d Router endpoint; the backing model server can be
-any Optimized Baseline overlay, including Intel XPU.
+# 4.2 Batch Gateway
 
 ## Overview
+
+Hardware-agnostic — Batch Gateway dispatches to an existing llm-d Router endpoint; the backing
+model server can be any Optimized Baseline overlay, including Intel XPU.
 
 [Batch Gateway](https://github.com/llm-d/llm-d-batch-gateway) provides an OpenAI-compatible Batch
 API (`/v1/batches`, `/v1/files`) for submitting, tracking, and managing large-scale batch

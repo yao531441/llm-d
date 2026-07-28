@@ -1,4 +1,4 @@
-# 1.2 P/D Disaggregation (In Progress)
+# 1.2 P/D Disaggregation
 
 ## Overview
 
