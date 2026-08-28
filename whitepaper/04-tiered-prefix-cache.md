@@ -6,7 +6,8 @@ Offloads evicted KV-cache blocks from accelerator memory to larger, cheaper tier
 optionally shared filesystem), increasing effective cache size for multi-turn/long-context
 workloads. Multiple offloading implementations exist (vLLM native `OffloadingConnector`, LMCache,
 MooncakeStore, SGLang HiCache); the Intel XPU overlay ships the **vLLM native** and
-**LMCache connector (CPU tier)** paths.
+**LMCache connector** paths, each with a CPU-RAM-only variant and a CPU RAM + shared-filesystem
+variant.
 
 ## Prerequisites
 
@@ -30,16 +31,33 @@ helm install ${GUIDE_NAME} \
 
 **Step 2 — Deploy the Model Server (Intel XPU overlay, choose a path)**
 
-Native (vLLM `OffloadingConnector`, CPU RAM tier):
+VRAM-only baseline (no CPU offloading, for comparison):
 
 ```bash
 kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/base
 ```
 
-LMCache connector (CPU RAM tier):
+Native (vLLM `OffloadingConnector`), CPU RAM only:
 
 ```bash
-kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/lmcache-connector/cpu/base
+kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/native/cpu/base/
+```
+
+Native, CPU RAM + shared filesystem (requires a ReadWriteMany PVC mounted at
+`/mnt/files-storage` — see [Storage Backends](https://github.com/llm-d/llm-d/blob/main/guides/tiered-prefix-cache/README.md#storage-backends)
+for GCP Lustre / AWS EFS setup guides):
+
+```bash
+export STORAGE_CLASS=""  # cluster default if empty; or e.g. "lustre" / "efs-sc"
+envsubst < ${REPO_ROOT}/guides/tiered-prefix-cache/manifests/pvc.yaml | kubectl apply -n ${NAMESPACE} -f -
+kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/native/fs/base/
+```
+
+LMCache connector (CPU RAM, or CPU RAM + filesystem if the PVC above was created):
+
+```bash
+export VARIANT=cpu  # cpu | fs
+kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/lmcache-connector/${VARIANT}/base/
 ```
 
 > [!IMPORTANT]
@@ -84,9 +102,13 @@ logs / metrics for prefix-cache reuse).
 
 ```bash
 helm uninstall ${GUIDE_NAME} -n ${NAMESPACE}
-kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/base
-# or, if you deployed LMCache:
-kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/lmcache-connector/cpu/base
+export CONNECTOR=native  # native | lmcache-connector
+export VARIANT=cpu       # cpu | fs
+kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/${CONNECTOR}/${VARIANT}/base --ignore-not-found
+# VRAM-only baseline, if that's what you deployed:
+kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/modelserver/xpu/vllm/base --ignore-not-found
+# if a filesystem-tier PVC was created:
+kubectl delete -f ${REPO_ROOT}/guides/tiered-prefix-cache/manifests/pvc.yaml -n ${NAMESPACE} --ignore-not-found
 ```
 
 ## Configuration Reference
@@ -95,6 +117,7 @@ kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/tiered-prefix-cache/models
 |---|---|---|
 | `deviceClassName` | `gpu.intel.com` | DRA device class (claim name `xpu-vllm-gpu`) |
 | `securityContext.privileged` | `true` | Required for host-pinned memory management |
-| CPU cache offload tier | CPU RAM (native) or CPU RAM (LMCache) | Effective KV-cache size beyond accelerator memory |
+| CPU cache offload tier | CPU RAM (native or LMCache) | Effective KV-cache size beyond accelerator memory |
+| Filesystem tier | CPU RAM + shared filesystem (native `fs` or LMCache `fs` variant) | Requires a ReadWriteMany PVC at `/mnt/files-storage` (e.g. GCP Lustre, AWS EFS) |
 
 ---

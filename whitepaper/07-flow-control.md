@@ -27,7 +27,9 @@ Flow Control because none is needed.
 ## Prerequisites
 
 - Chapter 0 (Common Installation) complete.
-- No additional cluster prerequisites beyond Chapter 0.
+- The `llm-d.ai` `InferenceObjective` CRD (see Step 0 below) — Flow Control's priority-tier
+  objectives depend on it and it is not installed by Chapter 0's GAIE CRD step, which only covers
+  the `InferencePool` CRD.
 
 ## Deployment Steps
 
@@ -38,6 +40,11 @@ export GUIDE_NAME="flow-control"
 export NAMESPACE="llm-d-flow-control"
 export MODEL_NAME="Qwen/Qwen3-32B"   # swap for the CI-sized Qwen/Qwen3-0.6B on constrained Intel XPU test nodes
 
+# 0. Install the llm-d.ai InferenceObjective CRD (ROUTER_RELEASE_URL is derived from
+#    ROUTER_RELEASE_VERSION in guides/env.sh) — in addition to the GAIE InferencePool CRD
+#    already installed in Chapter 0
+kubectl apply -f https://github.com/llm-d/llm-d-router/${ROUTER_RELEASE_URL}/manifests.yaml
+
 kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 # HF token secret (see Chapter 0.4)
@@ -45,8 +52,10 @@ kubectl create secret generic llm-d-hf-token \
   --from-literal="HF_TOKEN=${HF_TOKEN}" \
   --namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
 
-# 1. Deploy the Router (Standalone Mode)
-helm install ${GUIDE_NAME} \
+# 1. Deploy the Router (Standalone Mode) — this guide was migrated to the guide.yaml-driven
+#    "guide.py emit" method, so the README's own command now uses `helm upgrade --install`
+#    (safe to re-run) instead of `helm install`
+helm upgrade --install ${GUIDE_NAME} \
     ${ROUTER_STANDALONE_CHART} \
     -f ${REPO_ROOT}/guides/recipes/router/base.values.yaml \
     -f ${REPO_ROOT}/guides/${GUIDE_NAME}/router/${GUIDE_NAME}.values.yaml \
