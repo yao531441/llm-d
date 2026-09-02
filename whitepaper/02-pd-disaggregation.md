@@ -21,7 +21,7 @@ Chapter 0 only.
 ```bash
 export GUIDE_NAME="pd-disaggregation"
 export NAMESPACE="llm-d-pd-disaggregation"
-export MODEL_NAME="Qwen/Qwen3-0.6B"   # Intel XPU overlay default; swap for production models
+export MODEL_NAME="Qwen/Qwen3-0.6B"   # Intel XPU overlay default
 
 helm install ${GUIDE_NAME} \
     ${ROUTER_STANDALONE_CHART} \
@@ -30,14 +30,26 @@ helm install ${GUIDE_NAME} \
     -n ${NAMESPACE} --version ${ROUTER_CHART_VERSION}
 ```
 
+`MODEL_NAME` documents the served model for the inference test; it does not rewrite the model
+hard-coded in the Kustomize patches. To use another model, add a Kustomize overlay that updates the
+Prefill and Decode model arguments, tensor parallelism, and DRA resource requests together.
+
 **Step 2 — Deploy the Model Server (Intel XPU overlay)**
 
 > [!IMPORTANT]
 > GPUs are declared via DRA `ResourceClaimTemplate` (`deviceClassName: gpu.intel.com`), not
 > `resources.limits."gpu.intel.com/xe"`.
 
+Select the TCP compatibility overlay or the RDMA overlay, then apply it:
+
 ```bash
-kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/pd-disaggregation/modelserver/xpu/vllm
+# TCP compatibility path: CPU KV buffer, UCX over TCP
+export XPU_MODEL_SERVER_OVERLAY="${REPO_ROOT}/guides/pd-disaggregation/modelserver/xpu/vllm"
+
+# RDMA path: XPU KV buffer, UCX over ib/rc/ze_copy, DRA-managed RDMA NIC
+# export XPU_MODEL_SERVER_OVERLAY="${REPO_ROOT}/guides/pd-disaggregation/modelserver/xpu/vllm-rdma"
+
+kubectl apply -n ${NAMESPACE} -k "${XPU_MODEL_SERVER_OVERLAY}"
 ```
 
 This overlay includes:
@@ -48,8 +60,9 @@ This overlay includes:
 - `resource-claim-templates.yaml`: two `ResourceClaimTemplate`s, `xpu-prefill-claim` and
   `xpu-decode-claim`, each requesting 1 `gpu.intel.com` device
 
-For clusters with RDMA connectivity, use `modelserver/xpu/vllm-rdma` instead (UCX transport
-`ib,rc,ze_copy`).
+The RDMA overlay uses UCX transport `ib,rc,ze_copy`, places the KV buffer in XPU memory, and
+requests one DRA-managed RDMA NIC aligned with the XPU by PCIe root. Confirm the RDMA DRA driver
+and `dranet-rdma` device class are available before selecting it.
 
 **Step 3 — (Optional) Enable Monitoring**
 
@@ -83,21 +96,23 @@ curl -X POST http://${IP}/v1/completions \
 
 ## Troubleshooting
 
-- **Pod stuck at `Init:0/1`**: known routing-proxy sidecar issue
-  ([llm-d/llm-d#241](https://github.com/llm-d/llm-d/issues/241)); workaround: set
-  `proxy.enabled: false` — the Gateway API + InferencePool routing already covers what the sidecar
-  provided.
+- **Pod stuck at `Init:0/1`**: inspect the init container and routing-sidecar image pull/status:
+  `kubectl describe pod -n ${NAMESPACE} <pod>` and
+  `kubectl logs -n ${NAMESPACE} <pod> -c routing-proxy`. The Decode routing sidecar performs the
+  multi-step Prefill-to-Decode request orchestration and must not be disabled for this P/D
+  configuration.
 - **KV transfer failures**: check decode/prefill container logs for `nixl`:
   `kubectl logs -n ${NAMESPACE} <pod> -c modelserver | grep -i nixl`.
 - **`ResourceClaim` stuck `Pending`**: confirm the `gpu.intel.com` device class is registered;
   `kubectl get resourceclaims -n ${NAMESPACE}` for details.
-- **HuggingFace download failures**: check proxy env vars and DNS (`nslookup huggingface.co`).
+- **HuggingFace download failures**: verify the `llm-d-hf-token` Secret, inspect the model-server
+  logs, and check pod DNS/connectivity (`nslookup huggingface.co`).
 
 ## Cleanup
 
 ```bash
 helm uninstall ${GUIDE_NAME} -n ${NAMESPACE}
-kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/pd-disaggregation/modelserver/xpu/vllm
+kubectl delete -n ${NAMESPACE} -k "${XPU_MODEL_SERVER_OVERLAY}"
 ```
 
 ## Configuration Reference
@@ -106,20 +121,24 @@ kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/pd-disaggregation/modelser
 |---|---|---|
 | `kv_connector` | `NixlConnector` | KV transfer connector |
 | `kv_role` | `kv_both` | Both send and receive |
-| `kv_buffer_device` | `cpu` | Reduces GPU memory pressure |
+| `kv_buffer_device` | `cpu` (`xpu` with the RDMA overlay) | Selects CPU or XPU KV-transfer buffers |
 | `VLLM_USE_V1` | `1` | Required for P/D |
 | `VLLM_WORKER_MULTIPROC_METHOD` | `spawn` | Multiprocess start method |
 | `UCX_TLS` | `tcp` (or `ib,rc,ze_copy` for the RDMA overlay) | UCX transport |
 
 Resource requirements (Intel XPU overlay, `Qwen/Qwen3-0.6B`):
 
-| Role | Replicas | CPU | Memory | GPU |
+| Role | Replicas | CPU | Memory | XPU |
 |---|---|---|---|---|
 | Decode | 1 | 16 cores | 64Gi | 1× `gpu.intel.com` (DRA claim) |
-| Prefill | 3 | 16 cores/replica | 64Gi/replica | 1× `gpu.intel.com`/replica (DRA claim) |
+| Prefill | 3 | 8 cores/replica | 64Gi/replica | 1× `gpu.intel.com`/replica (DRA claim) |
 
 > [!WARNING]
 > Production models (e.g. `openai/gpt-oss-120b`) require substantially more CPU/memory/GPU than the
 > table above — re-plan capacity for your target model.
 
 ---
+
+## Benchmark Reports
+
+- [Qwen3-32B P/D disaggregation and topology benchmark on Intel B60](./pd/qwen3-32b-intel-b60-benchmark.md)
