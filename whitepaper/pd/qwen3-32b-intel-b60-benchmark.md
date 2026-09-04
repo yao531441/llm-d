@@ -5,6 +5,11 @@ This report evaluates llm-d Prefill/Decode (P/D) disaggregation with
 methodology summary with per-case results, grouped comparisons, ABBA arm
 values, calculation rules, and failure evidence.
 
+An editable [Excel chart workbook](./qwen3-32b-intel-b60-benchmark-charts.xlsx)
+visualizes the principal throughput, TTFT, TPOT, topology, and failure
+comparisons. It is generated directly from this report by
+[`generate_benchmark_charts.py`](./generate_benchmark_charts.py).
+
 ## 1. Scope
 
 The report covers eight related entries:
