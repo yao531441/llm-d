@@ -243,6 +243,25 @@ The Raw/llm-d normalized throughput ratio (`0.99472`) is a suite-level ratio.
 Its per-case geometric mean is `0.99587`; these values are close but are not
 the same statistic.
 
+### 4.1 Figure conventions
+
+The figures retain the report's comparison boundaries:
+
+- concurrency is a closed-loop client setting, not offered QPS, so these
+  curves must not be read as an open-loop capacity ladder;
+- curve color identifies ISL: blue is 1,024, orange is 8,192, and green is
+  16,384 tokens;
+- solid lines with circle markers identify OSL128, while dashed lines with
+  square markers identify OSL1,024;
+- the gray dotted line marks a ratio of 1.0;
+- each chart states its numerator and denominator. For latency ratios, a value
+  below 1.0 favors the numerator and a value above 1.0 favors the denominator.
+
+Figures are generated directly from the published tables. Small differences
+between plotted ratios and summary statistics can result from the tables'
+display rounding; the summary statistics retain the original calculation
+precision.
+
 ## 5. Preliminary Raw P/D
 
 The preliminary run produced four complete ISL1,024/OSL128 results and two
@@ -334,6 +353,13 @@ Ratios are llm-d divided by Raw:
 | 16,384 | 1,024 | 32 | smc-22 | 55.65 | 54.36 | -2.33% | 553.19 | 569.86 | 55.89 | 57.35 |
 | 16,384 | 1,024 | 64 | smc-19 | 40.46 | 40.47 | 0.02% | 72.90 | 71.77 | 53.62 | 54.66 |
 
+![Raw P/D versus llm-d 1P1D concurrency curves](qwen3-32b-intel-b60-benchmark-assets/01-raw-vs-llmd.svg)
+
+*Figure 1. Per-case llm-d/Raw ratios across the complete workload grid.
+Throughput values above 1.0 favor llm-d; latency values below 1.0 favor
+llm-d. The curves show near-parity request-path behavior rather than an
+offered-QPS capacity sweep.*
+
 ### 6.5 Interpretation boundary
 
 The ratios remain close to parity across all groupings. The largest
@@ -381,6 +407,13 @@ All ratios are Aggregate divided by llm-d P/D.
 | 16,384 | 128 | 32 | 30.12 | 20.08 | 1.500 | 0.673 | 3.732 | 0.770 |
 | 16,384 | 128 | 64 | 30.16 | 20.31 | 1.485 | 0.658 | 3.689 | 0.694 |
 | 16,384 | 1,024 | 64 | 40.48 | 40.47 | 1.000 | 0.836 | 1.185 | 1.007 |
+
+![Aggregate versus P/D paired cases](qwen3-32b-intel-b60-benchmark-assets/02-aggregate-vs-pd.svg)
+
+*Figure 2. Ten strict same-node pairs. Every value is Aggregate/P-D.
+Throughput above 1.0 favors Aggregate. For p99 latency, values below 1.0 mean
+Aggregate has lower latency, while values above 1.0 mean P/D has lower
+latency. The discrete bars avoid implying an unmeasured complete grid.*
 
 ### 7.4 Interpretation boundary
 
@@ -462,6 +495,12 @@ All ratios are 1P3D divided by 2P2D.
 | 16,384 | 1,024 | 32 | 108.20 | 145.77 | 1.347 | 0.648 | 0.989 | 0.699 |
 | 16,384 | 1,024 | 64 | 40.44 | 40.47 | 1.001 | 0.893 | 1.121 | 0.978 |
 
+![Equal-resource topology concurrency curves](qwen3-32b-intel-b60-benchmark-assets/03-topology-curves.svg)
+
+*Figure 3. Per-case 1P3D/2P2D ratios across the complete workload grid.
+The separate throughput, TTFT, TPOT, and E2E panels expose the
+output-length-dependent crossover and retain the latency trade-offs.*
+
 ### 8.4 Detailed interpretation
 
 The ratio is strongly workload-dependent:
@@ -493,6 +532,11 @@ twice against fresh model Pods.
 | Longest nominal 1 GiB transfer | approximately 683 s | 524.774 s |
 | Explicit NIXL expiry/failure | 0 | 0 |
 | Pod restart/UID change during measurement | 0 | 0 |
+
+![3P1D reproduced liveness failure](qwen3-32b-intel-b60-benchmark-assets/05-3p1d-failure.svg)
+
+*Figure 4. The two reproduced no-progress attempts are shown as failure
+evidence. They are not converted into a zero-throughput performance result.*
 
 In both attempts:
 
@@ -590,6 +634,12 @@ ISL16,384/OSL1,024/C64, 192 requests, 0.04 requests/s:
 Throughput is equal at the rate-limited operating point. The difference is in
 tail behavior: 2P2D has lower p99 TTFT, TPOT, and E2E.
 
+![Equal-resource ABBA arm-level throughput](qwen3-32b-intel-b60-benchmark-assets/04-abba.svg)
+
+*Figure 5. Arm-level throughput remains in execution order rather than being
+collapsed immediately to topology means. This makes same-topology
+repeatability and time drift visible.*
+
 ## 11. Third independent-workload pair
 
 The confirmation repeated Aggregate then 2P2D:
@@ -639,6 +689,15 @@ forming a second independent study.
   the missing response completions.
 
 ## 13. Audit identifiers
+
+The committed charts are regenerated from this report with:
+
+```bash
+python3 whitepaper/pd/generate_qwen3_32b_intel_b60_charts.py
+```
+
+The generator requires Python 3, Matplotlib, and NumPy. It validates the
+expected number of source rows before writing the five SVG files.
 
 | Scope | Run identifier | Status |
 | --- | --- | --- |
