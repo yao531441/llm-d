@@ -34,6 +34,11 @@ labels:
         kind: LeaderWorkerSet
         path: spec/leaderWorkerTemplate/workerTemplate/metadata/labels
         create: true
+      - group: leaderworkerset.x-k8s.io
+        version: v1
+        kind: LeaderWorkerSet
+        path: spec/leaderWorkerTemplate/leaderTemplate/metadata/labels
+        create: true
       - group: monitoring.coreos.com
         version: v1
         kind: PodMonitor
