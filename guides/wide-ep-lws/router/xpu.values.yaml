@@ -41,3 +41,11 @@ router:
       llm-d.ai/guide: "wide-ep-lws"
       llm-d.ai/accelerator-variant: "xpu"
       llm-d.ai/accelerator-vendor: "intel"
+      # Decode now runs as a cross-node LWS group (1 leader + N headless
+      # workers). Only the leader carries the client-facing routing-proxy
+      # sidecar / HTTP port 8000; headless workers share every other label
+      # here but don't listen on 8000 at all. LWS auto-labels every group's
+      # leader pod (including prefill's, since its group size is still 1)
+      # with this role label, so restricting to it excludes decode workers
+      # without needing a guide-specific label.
+      leaderworkerset.sigs.k8s.io/role: "leader"
