@@ -41,3 +41,14 @@ router:
       llm-d.ai/guide: "wide-ep"
       llm-d.ai/accelerator-variant: "xpu"
       llm-d.ai/accelerator-vendor: "intel"
+      # Decode now runs as a cross-node LWS group (1 leader + N headless
+      # workers). Only the leader carries the client-facing routing-proxy
+      # sidecar / HTTP port 8000; headless workers share every other label
+      # here but don't listen on 8000 at all. LWS does NOT propagate its
+      # leaderworkerset.sigs.k8s.io/role label down to pods (verified against
+      # a live LWS v0.10 install: that label only lands on the internal
+      # leader/worker StatefulSet objects, never on the Pods themselves) --
+      # worker-index is the label LWS actually puts on every pod, and the
+      # leader is always worker-index 0. Prefill is unaffected since its
+      # group size is still 1, so its only pod is worker-index 0 too.
+      leaderworkerset.sigs.k8s.io/worker-index: "0"
