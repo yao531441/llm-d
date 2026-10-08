@@ -21,9 +21,9 @@ support:
       engines: {vllm: validated}
     xpu:
       label: Intel XPU
-      notes: "2 replicas × 1 GPU via DRA · single-GPU pods have no room for the long-context `Qwen3-32B` config"
+      notes: "2 replicas × 1 XPU via DRA · single-device pods use the smaller model rather than the long-context `Qwen3-32B` config"
       model: Qwen/Qwen3-0.6B
-      engines: {vllm: validated}
+      engines: {vllm: validated, sglang: community}
     "tpu/v6":
       label: Google TPU v6e
       notes: "GKE only · 2 replicas × 8 chips (`2x4`, TP=8) · `INFRA_PROVIDER`: `base`, `gke`"
