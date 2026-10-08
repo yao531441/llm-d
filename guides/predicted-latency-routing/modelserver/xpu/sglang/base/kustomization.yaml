@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The latency predictor runs in the router; reuse the Optimized Baseline
+# XPU SGLang model server and its llm-d.ai/guide=optimized-baseline label.
+resources:
+  - ../../../../../optimized-baseline/modelserver/xpu/sglang/base
