@@ -51,7 +51,7 @@ This guide includes configurations for the following accelerator and model serve
 | --- | --- | --- | --- | --- | --- |
 | NVIDIA GPU | `gpu` | `Qwen/Qwen3-32B` | ✅ validated | 🟡 community | Default. H100 80 GB reference · 2 replicas × TP=2 (4 GPUs) · `INFRA_PROVIDER`: `base`, `gke` (SGLang uses the dedicated render pool) |
 | AMD GPU | `amd` | `Qwen/Qwen3-32B` | ✅ validated | — | 2 replicas × TP=2 (4 GPUs) |
-| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | — | 2 replicas × 1 GPU via DRA · fp16 |
+| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | 🟡 community | 2 replicas × 1 XPU via DRA · fp16 (SGLang uses the dedicated render pool) |
 | Google TPU v6e | `tpu/v6` | `Qwen/Qwen3-32B` | ✅ validated | — | GKE only · 2 replicas × 8 chips (`2x4`, TP=8) · vLLM 0.29 |
 | Google TPU v7 | `tpu/v7` | `Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8` | 🟡 community | — | GKE only · 2 replicas × 4 chips (`2x2x1`, TP=8) · vLLM 0.29 |
 | CPU | `cpu` | `meta-llama/Llama-3.2-3B-Instruct` | 🟡 community | — | 2 replicas |
@@ -63,7 +63,7 @@ This guide includes configurations for the following accelerator and model serve
 > The router and the model servers must agree on two things:
 >
 > - **Block size.** vLLM `--block-size` and SGLang `--page-size` are `64`, matching the `precise-prefix-cache-producer`'s `tokenProcessorConfig.blockSizeTokens`; change them together.
-> - **Model.** The `token-producer` `modelName` in [`router/precise-prefix-cache-routing.values.yaml`](router/precise-prefix-cache-routing.values.yaml) is `Qwen/Qwen3-32B`. On an accelerator that serves another model, set it to `MODEL` before deploying the router: with the default render Service the render call lands on the model servers themselves, so a mismatch is rejected outright rather than silently scoring against the wrong tokenizer.
+> - **Model.** The `token-producer` `modelName` in the [vLLM](router/precise-prefix-cache-routing.values.yaml) and [SGLang](router/precise-prefix-cache-routing-sglang.values.yaml) router values defaults to `Qwen/Qwen3-32B`. On an accelerator that serves another model, set it to `MODEL` in the selected values file before deploying the router. The render Service must tokenize with the same model; otherwise routing can use incorrect KV block hashes.
 
 For wide-EP LWS deployments (multi-port DP model servers), use the [`wide-ep` precise routing variant](../wide-ep/README.precise-prefix-cache-routing.md) instead of the manifests here.
 
@@ -75,6 +75,8 @@ For wide-EP LWS deployments (multi-port DP model servers), use the [`wide-ep` pr
 - Have the [proper client tools installed on your local system](../../helpers/client-setup/README.md) to use this guide.
 
 - Ensure your cluster has enough accelerators for your configuration (default NVIDIA GPU configuration: 2 replicas with tensor parallelism 2, 4 GPUs in total). If your cluster has fewer resources, adjust `replicas` and `--tensor-parallel-size` in the [model server patch](./modelserver/gpu/vllm/base/patch-vllm.yaml) for your environment.
+
+- For DRA-based overlays, install the accelerator's resource driver and verify its DeviceClass before deployment.
 
 - Create a [HuggingFace token](../../helpers/hf-token.md) and export it as `HF_TOKEN` in your shell. The router also reads it to reach gated tokenizers.
 
@@ -152,12 +154,33 @@ kubectl create secret generic llm-d-hf-token \
 ```bash
 # Paths to values files
 export ROUTER_BASE_VALUES="${REPO_ROOT}/guides/recipes/router/base.values.yaml"
+```
+<!-- variants:start -->
+<details open data-when="MODEL_SERVER=vllm">
+<summary><b>vLLM</b></summary>
+
+```bash
 export ROUTER_VALUES="${REPO_ROOT}/guides/${GUIDE_NAME}/router/${GUIDE_NAME}.values.yaml"
 ```
+
+</details>
+<details data-when="MODEL_SERVER=sglang">
+<summary><b>SGLang</b></summary>
+
+<!-- llm-d-cicd:skip start -->
+```bash
+export ROUTER_VALUES="${REPO_ROOT}/guides/${GUIDE_NAME}/router/${GUIDE_NAME}-sglang.values.yaml"
+```
+<!-- llm-d-cicd:skip end -->
+
+</details>
+<!-- variants:end -->
 <!-- guide:deploy.router_values end -->
 
 > [!NOTE]
 > The `prefix-cache-affinity-filter` in [`router/precise-prefix-cache-routing.values.yaml`](router/precise-prefix-cache-routing.values.yaml) uses a `peakPrefillThroughput` measured on the reference setup (`Qwen3-32B` on H100 80&nbsp;GB, TP=2; SGLang measures the same value as vLLM). On a different model or accelerator, measure and set your value with the [calibration guide](../recipes/router/calibration/README.md).
+
+The SGLang values file selects the SGLang KV-event decoder instead of the vLLM default; both SGLang accelerators use it. For Intel XPU, also set its `token-producer` `modelName` to `Qwen/Qwen3-0.6B` before installing the router. The dedicated XPU SGLang render overlay below already uses that model; the router, render Service and model server must agree on its name.
 
 **(Optional) Enable Prometheus monitoring on the `llm-d` router** by defining the `helm` values file (requires installing the monitoring stack mentioned in [Prerequisites](#prerequisites)):
 
@@ -219,7 +242,7 @@ Only `Ready` endpoints receive render calls, so apply this after the model serve
 
 </details>
 <details>
-<summary><b>SGLang</b></summary>
+<summary><b>NVIDIA GPU · SGLang</b></summary>
 
 <!-- guide:deploy.render[1] start -->
 <!-- llm-d-cicd:skip start -->
@@ -229,13 +252,22 @@ kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/${GUIDE_NAME}/render/standa
 <!-- llm-d-cicd:skip end -->
 <!-- guide:deploy.render[1] end -->
 
-SGLang does not implement vLLM's render endpoints, so the `render/standalone/` overlay runs a dedicated, GPU-less `vllm launch render` pool (3 replicas) instead.
-It tokenizes with vLLM's tokenizer whichever engine serves inference, and also suits vLLM deployments that should not spend model server CPU on tokenization.
-It is configured for `Qwen/Qwen3-32B`; for another model, change the model argument in [`render/standalone/deployment.yaml`](render/standalone/deployment.yaml) together with the router `token-producer` `modelName`. Scale it with `kubectl scale -n ${NAMESPACE} deploy/${GUIDE_NAME}-render --replicas=<N>`.
-These render pods deliberately do **not** carry the `llm-d.ai/guide` label: the router would otherwise treat them as routable model servers.
+</details>
+<details>
+<summary><b>Intel XPU · SGLang</b></summary>
+
+<!-- guide:deploy.render[2] start -->
+<!-- llm-d-cicd:skip start -->
+```bash
+kubectl apply -n ${NAMESPACE} -k ${REPO_ROOT}/guides/${GUIDE_NAME}/render/xpu-sglang/
+```
+<!-- llm-d-cicd:skip end -->
+<!-- guide:deploy.render[2] end -->
 
 </details>
 <!-- tabs:end -->
+
+SGLang does not implement vLLM's render endpoints, so both SGLang overlays run a dedicated, GPU-less `vllm launch render` pool (3 replicas). The default uses `Qwen/Qwen3-32B`; the XPU variant switches the tokenizer model to `Qwen/Qwen3-0.6B` while keeping the same render Service name. These pods do **not** carry the `llm-d.ai/guide` pod label, which is reserved for routable model servers. Scale the pool with `kubectl scale -n ${NAMESPACE} deploy/${GUIDE_NAME}-render --replicas=<N>` if render capacity becomes a bottleneck.
 
 **(Optional) Deploy the monitoring resources for model servers** (requires installing the monitoring stack mentioned in [Prerequisites](#prerequisites)):
 
@@ -319,7 +351,7 @@ kubectl run prefix-test --rm -i --restart=Never \
 for pod in $(kubectl get pods -n ${NAMESPACE} -l llm-d.ai/guide=${GUIDE_NAME} -o jsonpath='{.items[*].metadata.name}'); do
   echo "== ${pod}"
   kubectl get --raw "/api/v1/namespaces/${NAMESPACE}/pods/${pod}:8000/proxy/metrics" \
-    | grep -E '^(vllm:prefix_cache_(hits|queries)_total|vllm:request_success_total|sglang:(cache_hit_rate|num_requests_total))' || true
+    | grep -E '^(vllm:prefix_cache_(hits|queries)_total|vllm:request_success_total|sglang:(cache_hit_rate|cached_tokens_total|num_requests_total))' || true
 done
 ```
 <!-- guide:verify.tests.pod_metrics end -->
@@ -336,12 +368,12 @@ One pod reports most of the 10 requests in `vllm:request_success_total`, and its
 <details>
 <summary><b>SGLang</b></summary>
 
-One pod reports most of the requests in `sglang:num_requests_total`, and its `sglang:cache_hit_rate` is well above zero.
+One pod reports most of the requests in `sglang:num_requests_total`. Its cached-token count (`sglang:cached_tokens_total`) increases as the prefix is reused; the `sglang:cache_hit_rate` ratio may not be populated by every SGLang image. A cache hit by itself does not prove the Router ingested KV events: check its logs for ZMQ subscription errors, and repeat after the speculative index's 2-second TTL to ensure affinity persists beyond speculative placement.
 
 </details>
 <!-- tabs:end -->
 
-If the requests are spread evenly and hit rates stay near zero, the router is not receiving KV-cache events or cannot tokenize the prompt: re-run the render check above, confirm `--block-size` / `--page-size` match `blockSizeTokens`, and check the router logs (`kubectl logs -n ${NAMESPACE} deploy/${GUIDE_NAME}-epp`) for ZMQ subscription or `token-producer` errors. Performance benchmarks for this configuration are not part of this guide: they live with the model-specific guides.
+If requests spread evenly or prefix hits stay near zero, the router may not be receiving KV-cache events or may be unable to tokenize the prompt: re-run the render check above, confirm `--block-size` / `--page-size` match `blockSizeTokens`, and check the router logs (`kubectl logs -n ${NAMESPACE} deploy/${GUIDE_NAME}-epp`) for ZMQ subscription or `token-producer` errors. Performance benchmarks for this configuration are not part of this guide: they live with the model-specific guides.
 
 ## How It Works
 
@@ -370,12 +402,22 @@ kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/${GUIDE_NAME}/render/
 ```
 
 </details>
-<details data-when="MODEL_SERVER=sglang">
-<summary><b>SGLang</b></summary>
+<details data-when="ACCELERATOR_TYPE=gpu;MODEL_SERVER=sglang">
+<summary><b>NVIDIA GPU · SGLang</b></summary>
 
 <!-- llm-d-cicd:skip start -->
 ```bash
 kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/${GUIDE_NAME}/render/standalone/
+```
+<!-- llm-d-cicd:skip end -->
+
+</details>
+<details data-when="ACCELERATOR_TYPE=xpu;MODEL_SERVER=sglang">
+<summary><b>Intel XPU · SGLang</b></summary>
+
+<!-- llm-d-cicd:skip start -->
+```bash
+kubectl delete -n ${NAMESPACE} -k ${REPO_ROOT}/guides/${GUIDE_NAME}/render/xpu-sglang/
 ```
 <!-- llm-d-cicd:skip end -->
 
