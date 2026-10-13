@@ -34,7 +34,7 @@ This guide includes configurations for the following accelerator and model serve
 | --- | --- | --- | --- | --- | --- |
 | NVIDIA GPU | `gpu` | `openai/gpt-oss-120b` | ✅ validated | ✅ validated | H200 · 1P (TP=1) + 1D (TP=4), 5 GPUs; SGLang 1P (TP=2) + 1D (TP=2) · NIXL |
 | AMD GPU | `amd` | `amd/Llama-3.3-70B-Instruct-FP8-KV` | ✅ validated | — | AMD Instinct · 1P (TP=1) + 1D (TP=4) · NIXL |
-| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | 🟡 community | Intel GPU via DRA · 1P + 1D, 1 GPU each · NIXL (SGLang: TP=1, NIXL over TCP) |
+| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | 🟡 community | Intel GPU via DRA · 1P + 1D, 1 GPU each · NIXL (SGLang: TP=1, TCP or RDMA) |
 | Google TPU v6e | `tpu/v6` | `Qwen/Qwen3-32B` | ✅ validated | — | `2x4` v6e nodes on GKE · 1P + 1D, 8 chips each (TP=8) · TPUConnector |
 | Google TPU v7 | `tpu/v7` | `Qwen/Qwen3.5-397B-A17B-FP8` | 🟡 community | — | `2x2x1` TPU7x nodes on GKE · 1P + 1D, 4 chips each (TP=8) · TPUConnectorHMA |
 | Google TPU v7 (dynamic slicing) | `tpu/v7-dynamic-slice` | `Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8` | 🟡 community | — | TPU7x sub-slices via dynamic slicing + Kueue · `DisaggregatedSet` with 1P + 1D, one `2x2x1` sub-slice each · TPUConnectorHMA |
@@ -121,7 +121,7 @@ git clone https://github.com/llm-d/llm-d.git && cd llm-d && git checkout ${BRANC
 | --- | --- |
 | `gpu` | `base`, `gke`, `gke/a4x`, `gke/a4xmax`, `coreweave`, `aws`, `cks-mooncake` (SGLang: `base`, `gke`, `coreweave`, `aws`) |
 | `amd` | `base`, `amd-ci`, `oci`, `tensorwave`, `moriio/base`, `moriio/amd-ci`, `moriio/amd-ci-1p1d-tp8` |
-| `xpu` | `base`, `rdma` (SGLang: `base`) |
+| `xpu` | `base`, `rdma` |
 | `tpu/v6`, `tpu/v7`, `tpu/v7-dynamic-slice` | `gke` |
 | `iluvatar`, `metax`, `npu` | `base` |
 
@@ -284,6 +284,8 @@ The GPU overlays enable tool calling and reasoning parsing with `--enable-auto-t
 
 The Intel XPU SGLang overlay (`xpu/sglang/base`) uses the nightly `llm-d-xpu-sglang` image, which bundles NIXL built against a Level Zero-enabled UCX, and moves KV cache directly from XPU memory over TCP. It sets `UCX_MEMTYPE_CACHE=n` so UCX detects XPU memory instead of treating it as host memory, `--disaggregation-decode-retraction-backup=cpu_tensor` on decode, and `SGLANG_DISAGG_PREFILL_EARLY_SEND_CACHED_PREFIX=0` on prefill to avoid CUDA-only code paths.
 Its prefill liveness and readiness probes allow longer response times because `/health` waits for the scheduler; a long chunked prefill can temporarily make the endpoint return 503. Client disconnects through the Router do not currently cancel the corresponding SGLang P/D work, so plan capacity accordingly.
+
+To transfer KV over RDMA instead of TCP, set `INFRA_PROVIDER=rdma`. This overlay requests an RDMA NIC alongside each XPU using DRA and constrains the pair to the same PCIe root, then sets `UCX_TLS=ib,rc,ze_copy` while retaining `UCX_MEMTYPE_CACHE=n`. It requires the `dranet-rdma` DeviceClass and RDMA-capable NICs on both the prefill and decode nodes; the base overlay does not require DRANet.
 
 </details>
 <details data-when="ACCELERATOR_TYPE=tpu/v6,tpu/v7">
