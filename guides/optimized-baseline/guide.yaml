@@ -33,7 +33,7 @@ support:
       model: Qwen/Qwen3-0.6B
       providers:
         - {name: base, label: "Kubernetes (base)"}
-      engines: {vllm: validated, sglang: community}
+      engines: {vllm: validated, sglang: validated}
     "tpu/v6":
       label: Google TPU v6e
       notes: "GKE only · 2 replicas × 8 chips (`2x4`, TP=8)"
