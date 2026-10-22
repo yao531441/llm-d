@@ -49,6 +49,7 @@ channels:
     - nightly-e2e-optimized-baseline-gke-acc-gpu-vllm-x.yaml
     - nightly-e2e-optimized-baseline-gke-acc-tpu-vllm-x.yaml
     - nightly-e2e-optimized-baseline-ibm-acc-gpu-vllm-x.yaml
+    - nightly-e2e-optimized-baseline-intel-acc-xpu-sglang-x.yaml
     - nightly-e2e-optimized-baseline-intel-acc-xpu-vllm-x.yaml
     - nightly-e2e-pd-disaggregation-amd-ci-acc-rocm-vllm-moriio.yaml
     - nightly-e2e-pd-disaggregation-amd-ci-acc-rocm-vllm-nixl.yaml

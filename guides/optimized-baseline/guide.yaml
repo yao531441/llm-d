@@ -33,7 +33,7 @@ support:
       model: Qwen/Qwen3-0.6B
       providers:
         - {name: base, label: "Kubernetes (base)"}
-      engines: {vllm: validated, sglang: community}
+      engines: {vllm: validated, sglang: validated}
     "tpu/v5p":
       label: Google TPU v5p
       notes: "GKE only · 2 replicas × 4 chips (`2x2x1`, TP=4) · nightly runs on Spot capacity"
