@@ -34,7 +34,7 @@ This guide includes configurations for the following accelerator and model serve
 | --- | --- | --- | --- | --- | --- |
 | NVIDIA GPU | `gpu` | `openai/gpt-oss-120b` | ✅ validated | ✅ validated | H200 · 1P (TP=1) + 1D (TP=4), 5 GPUs; SGLang 1P (TP=2) + 1D (TP=2) · NIXL |
 | AMD GPU | `amd` | `openai/gpt-oss-120b` | ✅ validated | — | AMD Instinct · 1P (TP=1) + 1D (TP=4), 5 GPUs · NIXL |
-| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | 🟡 community | Intel GPU via DRA · 1P + 1D, 1 GPU each · NIXL (SGLang: TP=1, NIXL over TCP) |
+| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | ✅ validated | Intel GPU via DRA · 1P + 1D, 1 GPU each · NIXL (SGLang: TP=1, NIXL over TCP) |
 | Google TPU v5p | `tpu/v5p` | `Qwen/Qwen3-32B` | ✅ validated | — | `2x2x1` v5p nodes on GKE · 1P + 1D, 4 chips each (TP=4) · TPUConnector · nightly runs on Spot capacity |
 | Google TPU v6e | `tpu/v6` | `Qwen/Qwen3-32B` | 🟡 community | — | `2x4` v6e nodes on GKE · 1P + 1D, 8 chips each (TP=8) · Torch TPU vLLM (`torch-tpu-vllm` image, 16k context) · `vllm_torchtpu` TPUConnector · nightly moved to `tpu/v5p` while v6e capacity is unavailable |
 | Google TPU v7 | `tpu/v7` | `Qwen/Qwen3.5-397B-A17B-FP8` | 🟡 community | — | `2x2x1` TPU7x nodes on GKE · 1P + 1D, 4 chips each · prefill PCP=8 → decode DP=8 · TPURaidenConnector + 64 GiB prefill host KV offload |

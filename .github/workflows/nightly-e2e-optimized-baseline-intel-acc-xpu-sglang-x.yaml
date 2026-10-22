@@ -63,7 +63,7 @@ on:
         type: 'string'
 
   schedule:
-    - cron: '0 16 * * *'  # 16:00 UTC daily, staggered from the 10:00 UTC Intel XPU vLLM lane
+    - cron: '0 7 * * *'  # 07:00 UTC daily, distinct from the other Intel XPU lanes
 
 permissions:
   contents: write

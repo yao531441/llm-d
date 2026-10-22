@@ -20,7 +20,7 @@ on:
         default: 'main'
 
   schedule:
-    - cron: '0 18 * * *'  # After the 16:00 UTC benchmark
+    - cron: '0 9 * * *'  # 2h after the 07:00 UTC benchmark
 
 jobs:
   check_for_success:

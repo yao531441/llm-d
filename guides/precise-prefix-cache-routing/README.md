@@ -28,7 +28,7 @@ This guide includes configurations for the following accelerator and model serve
 | --- | --- | --- | --- | --- | --- |
 | NVIDIA GPU | `gpu` | `Qwen/Qwen3-32B` | ✅ validated | 🟡 community | Default. H100 80 GB reference · 2 replicas × TP=2 (4 GPUs) · `INFRA_PROVIDER`: `base`, `gke` (SGLang uses the dedicated render pool) |
 | AMD GPU | `amd` | `Qwen/Qwen3-32B` | ✅ validated | — | 2 replicas × TP=2 (4 GPUs) |
-| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | 🟡 community | vLLM: Data Center GPU Max 1550+ · SGLang: Arc Pro B60 · 2 replicas × 1 XPU via DRA · fp16 (SGLang uses the dedicated render pool) |
+| Intel XPU | `xpu` | `Qwen/Qwen3-0.6B` | ✅ validated | ✅ validated | vLLM: Data Center GPU Max 1550+ · SGLang: Arc Pro B60 · 2 replicas × 1 XPU via DRA · fp16 (SGLang uses the dedicated render pool) |
 | Google TPU v5p | `tpu/v5p` | `Qwen/Qwen3-32B` | ✅ validated | — | GKE only · 2 replicas × 4 chips (`2x2x1`, TP=4) · vLLM 0.29 · nightly runs on Spot capacity |
 | Google TPU v6e | `tpu/v6` | `Qwen/Qwen3-32B` | 🟡 community | — | GKE only · 2 replicas × 8 chips (`2x4`, TP=8) · Torch TPU vLLM (`torch-tpu-vllm` image, 16k context) · nightly moved to `tpu/v5p` while v6e capacity is unavailable |
 | Google TPU v7 | `tpu/v7` | `Qwen/Qwen3.5-397B-A17B-FP8` | 🟡 community | — | GKE only · 2 replicas × 4 chips (`2x2x1`, DP=2 × TP=4, EP) · Torch TPU vLLM |
